@@ -1,0 +1,127 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Blazor Form</PageTitle>
+
+<h1>Form in Blazor</h1>
+
+<EditForm Model="formModel" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <fieldset>
+        <div>
+            <label for="firstname">First Name*</label>
+            <InputText id="firstname" @bind-Value="formModel.FirstName" placeholder="Enter First Name" required />
+        </div>
+        <div>
+            <label for="lastname">Last Name*</label>
+            <InputText id="lastname" @bind-Value="formModel.LastName" placeholder="Enter Last Name" required />
+        </div>
+        <div>
+            <label for="email">Enter Email*</label>
+            <InputText id="email" @bind-Value="formModel.Email" type="email" placeholder="Enter email" required />
+        </div>
+        <div>
+            <label for="contact">Contact*</label>
+            <InputText id="contact" @bind-Value="formModel.Contact" type="tel" placeholder="Enter Mobile number" required />
+        </div>
+        <div>
+            <label>Gender*</label>
+            <InputRadioGroup @bind-Value="formModel.Gender">
+                <InputRadio Value=@Gender.Male /> Male
+                
+                <InputRadio id="female" Value=@Gender.Female /> Female
+                <InputRadio id="other" Value=@Gender.Other /> Other
+            </InputRadioGroup>
+        </div>
+        <div>
+            <label>Your best Subject</label>
+            <InputCheckbox id="english" @bind-Value="formModel.Subjects.English" /> English
+            <InputCheckbox id="maths" @bind-Value="formModel.Subjects.Maths" /> Maths
+            <InputCheckbox id="physics" @bind-Value="formModel.Subjects.Physics" /> Physics
+        </div>
+        <div>
+            <label for="file">Upload Resume*</label>
+            <InputFile id="file" OnChange="HandleFileSelected" required />
+        </div>
+        <div>
+            <label for="url">Enter URL*</label>
+            <InputText id="url" @bind-Value="formModel.Url" type="url" placeholder="Enter url" required />
+        </div>
+        <div>
+            <label>Select your choice</label>
+            <InputSelect @bind-Value="formModel.SelectedOption">
+                <option value="" disabled>Select your Ans</option>
+                <optgroup label="Beginers">
+                    <option value="1">HTML</option>
+                    <option value="2">CSS</option>
+                    <option value="3">JavaScript</option>
+                </optgroup>
+                <optgroup label="Advance">
+                    <option value="4">React</option>
+                    <option value="5">Node</option>
+                    <option value="6">Express</option>
+                    <option value="t">MongoDB</option>
+                </optgroup>
+            </InputSelect>
+        </div>
+        <div>
+            <label for="about">About</label>
+            <InputTextArea id="about" @bind-Value="formModel.About" placeholder="About yourself" required />
+        </div>
+        <button type="button" @onclick="HandleReset">Reset</button>
+        <button type="submit">Submit</button>
+    </fieldset>
+</EditForm>
+
+@code
+{
+    private FormModel formModel = new FormModel();
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        formModel.Resume = file;
+    }
+    private void HandleReset()
+    {
+        formModel = new FormModel();
+    }
+    private void HandleSubmit()
+    {
+        Console.WriteLine(formModel.FirstName);
+        Console.WriteLine(formModel.LastName);
+        Console.WriteLine(formModel.Email);
+        Console.WriteLine(formModel.Contact);
+        Console.WriteLine(formModel.About);
+        Console.WriteLine(formModel.Resume);
+        Console.WriteLine(formModel.SelectedOption);
+        Console.WriteLine(formModel.Subjects);
+    }
+    public class FormModel
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Contact { get; set; } = string.Empty;
+        public Gender Gender { get; set; }
+        public SubjectSelection Subjects { get; set; } = new SubjectSelection();
+        public IBrowserFile Resume { get; set; }
+        public string Url { get; set; } = string.Empty;
+        public string SelectedOption { get; set; } = string.Empty;
+        public string About { get; set; } = string.Empty;
+        public class SubjectSelection
+        {
+            public bool English { get; set; } = true;
+            public bool Maths { get; set; } = false;
+            public bool Physics { get; set; } = false;
+        }
+    }
+
+    public enum Gender
+    {
+        Male,
+        Female,
+        Other
+    };
+}
